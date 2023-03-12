@@ -11,19 +11,20 @@ def main():
         highlighted_text = re.findall(r'\(\((.*?)\)\)', text)[0]
         st.write(highlighted_text)
         # ask what highlighted text means in the context of the text
-        d = rp.explain(rp.Dialogue(), text, highlighted_text)
+        d = rp.explain(text, highlighted_text)
         st.write(str(d))
         # retrieve vocabulary and log it to the dialogue
-        d = rp.log(d, highlighted_text)
+        d = rp.log(d)
+        st.write(str(d))
         # get prompts
-        prompts = rp.suggest(d)
-        # ask the user to choose one of the prompts
-        prompt = st.selectbox("Choose one of the prompts", prompts)
-        # keep chatting
-        d = rp.chat(d, prompt)
-        st.write(str(d))
-        # for the time being, we end the chat here. get a string representation of the dialogue
-        st.write(str(d))
+        # prompts = rp.suggest(d)
+        # # ask the user to choose one of the prompts
+        # prompt = st.selectbox("Choose one of the prompts", prompts)
+        # # keep chatting
+        # d = rp.chat(d, prompt)
+        # st.write(str(d))
+        # # for the time being, we end the chat here. get a string representation of the dialogue
+        # st.write(str(d))
 
 
 if __name__ == '__main__':

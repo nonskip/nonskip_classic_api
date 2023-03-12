@@ -11,6 +11,6 @@ def explain(text: str, h_text: str) -> Dialogue:
     # create a prompt out of the text and the highlighted text.
     prompt = ...
     d = Dialogue(text=text, h_text=h_text)
-    d = chat(d, prompt)
+    #d = chat(d, prompt)
     return d
 
