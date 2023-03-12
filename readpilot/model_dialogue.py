@@ -1,5 +1,6 @@
 from pydantic import BaseModel, validator
-from . import Message, Word
+from .model_message import Message
+from .model_word import Word
 
 
 class Dialogue(BaseModel):
