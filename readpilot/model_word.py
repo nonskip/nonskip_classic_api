@@ -2,5 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Vocabulary:
-    pass
+class Word:
+    lemma: str
+    definition: str

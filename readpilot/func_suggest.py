@@ -1,5 +1,5 @@
-from readpilot import Dialogue
+from . import Dialogue
 
 
-def suggest(dialogue: Dialogue) -> list[str]:
+def suggest(d: Dialogue) -> list[str]:
     pass
