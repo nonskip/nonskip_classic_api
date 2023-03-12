@@ -1,4 +1,4 @@
 # readpilot
-Your copilot for reading a book as a Korean learner of English
+Your copilot for reading a books in English
 
 > Python >= 3.9.12
