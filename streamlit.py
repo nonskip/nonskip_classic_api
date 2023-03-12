@@ -13,14 +13,14 @@ def main():
         # ask what highlighted text means in the context of the text
         d = rp.explain(rp.Dialogue(), text, highlighted_text)
         st.write(str(d))
-        # retrieve vocabulary
+        # retrieve vocabulary and log it to the dialogue
         d = rp.log(d, highlighted_text)
-        # get suggested_prompts
-        suggested_prompts = rp.suggest(d)
-        # ask the user to choose one of the suggested_prompts
-        selected_prompt = st.selectbox("Choose one of the suggested_prompts", suggested_prompts)
+        # get prompts
+        prompts = rp.suggest(d)
+        # ask the user to choose one of the prompts
+        prompt = st.selectbox("Choose one of the prompts", prompts)
         # keep chatting
-        d = rp.chat(d, selected_prompt)
+        d = rp.chat(d, prompt)
         st.write(str(d))
         # for the time being, we end the chat here. get a string representation of the dialogue
         st.write(str(d))
