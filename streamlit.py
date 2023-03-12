@@ -13,8 +13,8 @@ def main():
         # ask what highlighted text means in the context of the text
         d = rp.explain(rp.Dialogue(), text, highlighted_text)
         st.write(str(d))
-        # retreive vocabulary
-        d = rp.retrieve(d, highlighted_text)
+        # retrieve vocabulary
+        d = rp.log(d, highlighted_text)
         # get suggested_prompts
         suggested_prompts = rp.suggest(d)
         # ask the user to choose one of the suggested_prompts
