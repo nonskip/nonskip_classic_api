@@ -1,4 +1,4 @@
 # readpilot
-Your copilot for reading a books in English
+Your copilot for reading books in English
 
 > Python >= 3.9.12
