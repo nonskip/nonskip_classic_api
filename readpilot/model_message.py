@@ -6,7 +6,7 @@ class Message(BaseModel):
     content: str
 
     @classmethod
-    @validator('role')
+    @validator('role', allow_reuse=True)
     def role_must_be_either_system_assistant_user(cls, v):
         if v not in ('system', 'assistant', 'user'):
             raise ValueError('role must be either system / assistant / user, but was ' + v)

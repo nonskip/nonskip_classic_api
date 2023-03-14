@@ -15,7 +15,7 @@ class Dialogue(BaseModel):
     ]
 
     @classmethod
-    @validator('model')
+    @validator('model', allow_reuse=True)
     def model_must_be_gpt_3_5_turbo(cls, v):
         if v != 'gpt-3.5-turbo':
             raise ValueError('model must be gpt-3.5-turbo, but was ' + v)
