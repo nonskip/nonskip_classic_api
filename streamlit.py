@@ -10,6 +10,13 @@ def explain(text: str, h_text: str) -> rp.Dialogue:
     return d
 
 
+@st.cache_data
+def suggest(_d: rp.Dialogue) -> list[str]:
+    st.session_state['suggest_pressed'] = True
+    prompts = rp.suggest(_d)
+    return prompts
+
+
 def main():
     st.markdown(f"# 📚Readpilot - {rp.__version__}")
     # set the height of the area to be reasonably spacy
@@ -22,7 +29,7 @@ def main():
         d = explain(text, h_text)
         st.write(d.messages[-1].content)
         # get suggested prompts
-        prompts = rp.suggest(d)
+        prompts = suggest(d)
         # ask the user to choose one of the prompts
         prompt = st.selectbox("Choose a follow-up question to ask", prompts)
         if st.session_state.get('ask_pressed', False) or st.button("ask"):

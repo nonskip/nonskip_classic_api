@@ -1,9 +1,9 @@
-from . import Dialogue
+from .model_dialogue import Dialogue
+from .func_chat import chat
+from .prompts import PROMPT_SUGGEST
 
 
 def suggest(d: Dialogue) -> list[str]:
-    return [
-        "좀 더 자세히 설명해줘.",
-        "비슷한 표현으론 뭐가 있어?",
-        "자주 쓰이는 표현이야?"
-    ]
+    d = chat(PROMPT_SUGGEST, d)
+    suggestions = d.messages[-1].content.split('\n')
+    return suggestions
