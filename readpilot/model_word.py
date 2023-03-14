@@ -1,7 +1,8 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Word:
+class Word(BaseModel):
     lemma: str
     definition: str
+    url: str
+
