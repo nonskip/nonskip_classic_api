@@ -1,14 +1,16 @@
 from pydantic import BaseModel, validator
-from . import Message, Word
+from .model_message import Message
+import datetime
 
 
 class Dialogue(BaseModel):
-    text: str
-    h_text: str
-    words: list[Word] = list()
     # https://platform.openai.com/docs/guides/chat/introduction
     model: str = "gpt-3.5-turbo"
-    messages: list[Message] = list()
+    messages: list[Message] = [
+        Message(role="system", content=f"You are ChatGPT, a large language model trained by OpenAI."
+                                       " Answer as concisely as possible."
+                                       f" Current date: {datetime.datetime.today()}")
+    ]
 
     @classmethod
     @validator('model')

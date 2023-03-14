@@ -8,13 +8,13 @@ def main():
     text = st.text_area("Enter your paragraph here")
     # find the area in which the user has marked with (( )).
     if st.button("explain"):
-        highlighted_text = re.findall(r'\(\((.*?)\)\)', text)[0]
-        st.write(highlighted_text)
+        h_text = re.findall(r'\(\((.*?)\)\)', text)[0]
+        st.write(h_text)
         # ask what highlighted text means in the context of the text
-        d = rp.explain(rp.Dialogue(), text, highlighted_text)
+        d = rp.explain(text, h_text)
         st.write(str(d))
         # retrieve vocabulary and log it to the dialogue
-        d = rp.log(d, highlighted_text)
+        d = rp.log(d, h_text)
         # get prompts
         prompts = rp.suggest(d)
         # ask the user to choose one of the prompts
