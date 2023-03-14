@@ -3,17 +3,10 @@ import readpilot as rp
 import re
 
 
-
 @st.cache_data
 def explain(text: str, h_text: str) -> rp.Dialogue:
     st.session_state['explain_pressed'] = True
     d = rp.explain(text, h_text)
-    return d
-
-
-@st.cache_data
-def chat(d: rp.Dialogue, prompt: str) -> rp.Dialogue:
-    d = rp.chat(d, prompt)
     return d
 
 
@@ -34,8 +27,9 @@ def main():
         prompt = st.selectbox("Choose a follow-up question to ask", prompts)
         if st.session_state.get('ask_pressed', False) or st.button("ask"):
             # keep chatting
-            d = chat(d, prompt)
-            st.write(d.messages[-1].content)
+            with st.spinner("asking..."):
+                d = rp.chat(prompt, d)
+                st.write(d.messages[-1].content)
 
 
 if __name__ == '__main__':
