@@ -1,15 +1,17 @@
 from pydantic import BaseModel, validator
 from .model_message import Message
-import datetime
+from .prompts import PROMPT_SYSTEM
 
 
 class Dialogue(BaseModel):
+    """
+    To be used with the official ChatGPT api.
+    refer to:
     # https://platform.openai.com/docs/guides/chat/introduction
+    """
     model: str = "gpt-3.5-turbo"
     messages: list[Message] = [
-        Message(role="system", content=f"You are ChatGPT, a large language model trained by OpenAI."
-                                       " Answer as concisely as possible."
-                                       f" Current date: {datetime.datetime.today()}")
+        Message(role="system", content=PROMPT_SYSTEM)
     ]
 
     @classmethod
