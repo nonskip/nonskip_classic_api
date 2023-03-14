@@ -20,7 +20,7 @@ def parse(p: str) -> list[str]:
     # 2. ...
     # 3. ...
     # 
-    # The output should be list of questions!
+    # The output should be list of questions
     # 
     return [*filter(lambda s: s != '', p.split(':')[1].split('\n'))]
 
