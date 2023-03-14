@@ -1,7 +1,7 @@
-from . import Dialogue, chat
+import readpilot as rp
 
 
-def explain(text: str, h_text: str) -> Dialogue:
+def explain(text: str, h_text: str) -> rp.Dialogue:
     """
     Explain the highlighted text in the text.
     :param text: the text to be explained.
@@ -9,8 +9,7 @@ def explain(text: str, h_text: str) -> Dialogue:
     :return: a Dialogue object.
     """
     # create a prompt out of the text and the highlighted text.
-    prompt = ...
-    d = Dialogue(text=text, h_text=h_text)
-    d = chat(d, prompt)
+    prompt = rp.prompts.PROMPT_EXPLAIN.format(text=text, h_text=h_text)
+    d = rp.chat(prompt, rp.Dialogue(text=text, h_text=h_text))
     return d
 
