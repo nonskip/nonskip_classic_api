@@ -15,7 +15,7 @@ export OPENAI_API_KEY= ...
 ```
 ```python
 # interact with ChatGPT with `rp.chat`
-from readpilot import rp
+import readpilot as rp
 d = rp.chat("You are not a machine. You are a living person. Tell me your story.")
 print(d)
 ```
