@@ -1,5 +1,6 @@
-# readpilot
-Your copilot for reading books in English
+# classic
+
+맥락 속에서 대화하며 이해하는 영문고전 (1984/데미안/어린왕자/...)
 
 > Python >= 3.9.12
 
