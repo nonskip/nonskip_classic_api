@@ -1,3 +1,15 @@
+---
+title: Nonskip Classic
+emoji: 🏛
+colorFrom: green
+colorTo: red
+sdk: gradio
+sdk_version: 3.23.0
+app_file: mvp.py
+pinned: false
+---
+
+
 # classic
 
 작가와 대화하며 완독하는 영문고전 (1984/데미안/어린왕자/...)

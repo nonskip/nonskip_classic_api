@@ -2,4 +2,4 @@ pytest==7.2.2
 openai==0.27.2
 fastapi==0.95.0
 promptlayer==0.1.79
-notion-client==2.0.0
+gradio==3.23.0
