@@ -5,6 +5,7 @@ from .models import Dialogue, Message
 from . import SUGGEST, EXPLAIN
 from promptlayer import openai
 import os
+import time
 
 app = FastAPI()
 
@@ -83,6 +84,7 @@ def log(context: str,
                            ]
                        })
     toggle_id = r.json()['results'][0]['id']
+    time.sleep(3.0)
     r = requests.patch(f'https://api.notion.com/v1/blocks/{toggle_id}/children',
                        headers={
                            'Authorization': f"Bearer {os.environ['NOTION_TOKEN']}",
@@ -99,10 +101,8 @@ def log(context: str,
                                                                                 'italic': False,
                                                                                 'strikethrough': False,
                                                                                 'underline': False},
-                                                                'href': None,
                                                                 'plain_text': str(d),
-                                                                'text': {'content': str(d),
-                                                                         'link': None},
+                                                                'text': {'content': str(d)},
                                                                 'type': 'text'}]},
                                    'type': 'paragraph'
                                }

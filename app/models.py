@@ -36,6 +36,6 @@ class Dialogue(BaseModel):
         return v
 
     def __str__(self) -> str:
-        return "\n".join([str(m) for m in self.messages])
+        return "\n\n#######################\n\n".join([str(m) for m in self.messages])
 
 
