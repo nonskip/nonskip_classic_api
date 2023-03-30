@@ -7,6 +7,7 @@ sdk: gradio
 sdk_version: 3.23.0
 app_file: mvp.py
 pinned: false
+python_version: 3.9.12
 ---
 
 
