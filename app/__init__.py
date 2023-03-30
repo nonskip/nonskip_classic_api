@@ -7,4 +7,4 @@ SUGGEST = promptlayer.prompts.get("suggest")['template']
 
 
 # define version here
-__version__ = "0.0.2"
+__version__ = "0.0.3"
