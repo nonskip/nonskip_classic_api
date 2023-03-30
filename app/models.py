@@ -1,6 +1,5 @@
-from typing import Optional
 from pydantic import BaseModel, validator
-from .prompts import SYSTEM
+from . import SYSTEM
 
 
 class Message(BaseModel):
@@ -28,8 +27,6 @@ class Dialogue(BaseModel):
     messages: list[Message] = [
         Message(role="system", content=SYSTEM)
     ]
-    context: Optional[str]
-    s_text: Optional[str]
 
     @classmethod
     @validator('model', allow_reuse=True)
