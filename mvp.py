@@ -1,9 +1,8 @@
 """
 Just a quick implementation
 """
-import json
+import os
 from copy import deepcopy
-
 import gradio as gr
 from pathlib import Path
 from app.main import explain, log, chat
@@ -66,7 +65,7 @@ with gr.Blocks() as demo:
                 s_text = text[start:end]
                 if len(s_text) == 0:
                     raise gr.Error("Please select a text first")
-                window_length = 500
+                window_length = 800
                 context = text[max(0, start-window_length):min(len(text), end+window_length)]
                 d = explain(context, s_text)
                 messages = deepcopy(d.messages[1:])  # the first one is a system message. so we don't need it
@@ -94,6 +93,8 @@ with gr.Blocks() as demo:
             chatbot = gr.Chatbot()
             prompt_area = gr.Text(placeholder="ask a follow-up and press Enter...",
                                   interactive=True, show_label=False, visible=False)
+            gr.Markdown("> 모든 대화 기록은 [이 노션 페이지](https://www.notion.so/eubinecto/Vocabulary-Log-868b663485084b4cb502fc5741929419?pvs=4)에서"
+                        " 조회 가능합니다 🙂")
             # --- register listeners here --- #
             dropdown.select(on_select_dropdown, outputs=text_area)
             text_area.select(on_select_area, outputs=[s_text_area, start_number, end_number])
@@ -110,4 +111,4 @@ with gr.Blocks() as demo:
                                outputs=[chatbot, dialogue_area, prompt_area])\
                        .then(on_finish,
                              inputs=[s_text_area, dialogue_area])
-demo.launch(share=True)
+demo.launch(auth=(os.environ['NONSKIP_CLASSIC_USER'], os.environ['NONSKIP_CLASSIC_PASSWORD']))
