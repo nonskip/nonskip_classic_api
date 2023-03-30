@@ -84,6 +84,7 @@ with gr.Blocks() as demo:
 
             def on_submit_prompt(s_text: str, d_raw: str, prompt: str):
                 d = Dialogue.parse_raw(d_raw)
+                prompt = "(문맥 상) " + prompt
                 d = chat(prompt, d)
                 messages = deepcopy(d.messages[1:])  # the first one is a system message. so we don't need it
                 messages[0].content = s_text
