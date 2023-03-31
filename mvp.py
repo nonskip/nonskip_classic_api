@@ -25,21 +25,13 @@ with open(Path(__file__).resolve().parent / "assets" / "1984.txt") as fh:
     _1984_pages = textwrap.wrap(fh.read(), MAX_PAGE_CHARS, replace_whitespace=False)
 
 books = {
-    'The Little Prince': {
-        'pages': prince_pages,
-    },
-    'The Lord of the Flies': {
-        'pages': lord_pages,
-    },
-    'Demian': {
-        'pages': demian_pages,
-    },
-    '1984': {
-        'pages': _1984_pages,
-    }
+    'The Little Prince': prince_pages,
+    'The Lord of the Flies': lord_pages,
+    'Demian': demian_pages,
+    '1984': _1984_pages,
 }
 
-with gr.Blocks(theme=gr.themes.Monochrome()) as interface:
+with gr.Blocks(theme=gr.themes.Base()) as interface:
     # ---- variables ---- #
     curr_page = gr.Number(visible=False)  # store current page here
     start_number = gr.Number(visible=False)  # s_text start number
@@ -47,24 +39,25 @@ with gr.Blocks(theme=gr.themes.Monochrome()) as interface:
 
     # --- start rendering from here --- #
     gr.Markdown("# Nonskip Classic 📜 (MVP)")
-    with gr.Row():
-        with gr.Column(scale=20):
+    with gr.Tabs() as tabs:
+        with gr.TabItem("read", id=0):
             with gr.Group():
                 titles_dropdown = gr.Dropdown(list(books.keys()), label="📚classics", multiselect=False)
                 title_text = gr.Text(visible=False)
                 text_area = gr.TextArea(interactive=False, label="📖text")
-        with gr.Column():
-            with gr.Row():
                 with gr.Group(equal_width=True):
                     # put all the buttons side by side
-                    prev_button = gr.Button("◀️")
-                    curr_button = gr.Button("(.../...)", interactive=False)
-                    next_button = gr.Button("▶️")
-                    flag_button = gr.Button("flag")
-                    explain_button = gr.Button("explain")
-                    s_text_area = gr.Textbox(interactive=False, label="🪞selected")
-                    flags_dropdown = gr.Dropdown(label="🚩flags", multiselect=True)
-
+                    with gr.Row(equal_height=True):
+                        prev_button = gr.Button("◀️").style(size='sm')
+                        next_button = gr.Button("▶️").style(size='sm')
+                        curr_button = gr.Button("(.../...)", interactive=False).style(size='sm')
+                        flag_button = gr.Button("flag").style(size='sm')
+                        explain_button = gr.Button("explain").style(size='sm')
+                    with gr.Row(equal_height=True):
+                        s_text_area = gr.Textbox(interactive=False, label="🪞selected")
+                        flags_dropdown = gr.Dropdown(label="🚩flags", multiselect=True)
+        with gr.TabItem("chat", id=1):
+            with gr.Row():
                 with gr.Group():
                     chatbot = gr.Chatbot(label="ChatGPT")
                     prompt_area = gr.Text(placeholder="ask a follow-up and press Enter...",
@@ -78,7 +71,7 @@ with gr.Blocks(theme=gr.themes.Monochrome()) as interface:
 
                 def update_curr_page(page: int, title: str):
                     page = int(page)
-                    max_page = len(books[title]['pages'])
+                    max_page = len(books[title])
                     return f"({page + 1}/{max_page})"
 
 
@@ -91,7 +84,11 @@ with gr.Blocks(theme=gr.themes.Monochrome()) as interface:
 
                 def on_click_flag_button(flags: list[str], s_text: str, start: int):
                     start = int(start)
-                    flags.append(f"{s_text}🏷{start}")
+                    flags = set(flags)
+                    flags.add(f"{s_text}🏷{start}")
+                    # --- merge overlapping flags, if possible --- #
+                    flags = list(flags)
+                    flags.sort(key=lambda x: int(x.split("🏷")[1]))
                     return flags
 
 
@@ -143,41 +140,51 @@ with gr.Blocks(theme=gr.themes.Monochrome()) as interface:
                     page = int(page)
                     page -= 1
                     page = max(0, page)
-                    return page, books[title]['pages'][page]
+                    return page, books[title][page]
 
 
                 def on_click_next_button(page: int, title: str):
                     page = int(page)
                     page += 1
-                    page = min(len(books[title]['pages']) - 1, page)
-                    return page, books[title]['pages'][page]
+                    page = min(len(books[title]) - 1, page)
+                    return page, books[title][page]
+
+
+                def update_flagged_text_area(text: str, flags: list[str]):
+                    pass
 
 
                 # --- register listeners here --- #
                 titles_dropdown.select(lambda x: x, inputs=titles_dropdown, outputs=title_text) \
-                    .then(lambda x: books[x]['pages'][0], inputs=title_text, outputs=text_area) \
+                    .then(lambda x: books[x][0],
+                          inputs=title_text,
+                          outputs=text_area) \
                     .then(lambda x: 0, outputs=curr_page) \
                     .then(lambda x: list(), outputs=flags_dropdown) \
-                    .then(update_curr_page, inputs=[curr_page, title_text], outputs=curr_button)
+                    .then(update_curr_page,
+                          inputs=[curr_page, title_text],
+                          outputs=curr_button)
                 text_area.select(on_select_text_area,
                                  outputs=[s_text_area, start_number, end_number])
                 dialogue_area = gr.TextArea(visible=False)
-                prev_button.click(on_click_prev_button, inputs=[curr_page, title_text], outputs=[curr_page, text_area]) \
-                    .then(update_curr_page, inputs=[curr_page, title_text], outputs=curr_button)\
-                    .then(lambda x: None, outputs=s_text_area)\
+                prev_button.click(on_click_prev_button,
+                                  inputs=[curr_page, title_text],
+                                  outputs=[curr_page, text_area]) \
+                    .then(update_curr_page, inputs=[curr_page, title_text], outputs=curr_button) \
+                    .then(lambda x: None, outputs=s_text_area) \
                     .then(lambda x: list(), outputs=flags_dropdown)
-                next_button.click(on_click_next_button, inputs=[curr_page, title_text], outputs=[curr_page, text_area]) \
+                next_button.click(on_click_next_button,
+                                  inputs=[curr_page, title_text],
+                                  outputs=[curr_page, text_area]) \
                     .then(update_curr_page, inputs=[curr_page, title_text], outputs=curr_button) \
                     .then(lambda x: None, outputs=s_text_area) \
                     .then(lambda x: list(), outputs=flags_dropdown)
                 flag_button.click(on_click_flag_button,
                                   inputs=[flags_dropdown, s_text_area, start_number],
-                                  outputs=flags_dropdown)\
-                           .then(lambda x: list(sorted(x, key=lambda y: int(y.split("🏷")[1]))),
-                                 inputs=flags_dropdown,
-                                 outputs=flags_dropdown)
+                                  outputs=flags_dropdown)
                 explain_button.click(lambda x: None,
                                      outputs=chatbot) \
+                    .then(lambda x: gr.Tabs.update(selected=1), inputs=None, outputs=tabs) \
                     .then(on_click_explain_button,
                           inputs=[text_area, start_number, end_number],
                           outputs=[chatbot, dialogue_area, prompt_area]) \
