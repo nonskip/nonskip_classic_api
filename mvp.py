@@ -4,8 +4,8 @@ Just a quick implementation
 from copy import deepcopy
 import gradio as gr
 from pathlib import Path
-from app.main import explain, log, chat, suggest
-from app.models import Dialogue
+from src.main import explain, log, chat, suggest
+from src.models import Dialogue
 import textwrap
 
 # --- constants --- #

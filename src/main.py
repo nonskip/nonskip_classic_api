@@ -1,8 +1,9 @@
-from datetime import datetime
 import requests
+from datetime import datetime
+from typing import Optional
 from fastapi import FastAPI
 from .models import Dialogue, Message
-from . import SUGGEST, EXPLAIN
+from . import SUGGEST, EXPLAIN, SYSTEM_EXPLAIN, SYSTEM_REFLECT, SYSTEM_COFFEECHAT
 from promptlayer import openai
 import os
 import time
@@ -11,43 +12,46 @@ app = FastAPI()
 
 
 @app.post("/chat")
-def chat(prompt: str,
-         d: Dialogue = None) -> Dialogue:
+def chat(d: Dialogue, prompt: Optional[str] = None) -> Dialogue:
     """
     Chat with GPT3.5 via Openai's ChatCompletion API.
     """
-    if d is None:
-        d = Dialogue()
-    d.messages.append(Message(role="user", content=prompt))
+    if prompt:
+        d.messages.append(Message(role="user", content=prompt))
     r = openai.ChatCompletion.create(**d.dict())
     d.messages.append(Message(role="assistant", content=r.choices[0].message.content))
     return d
 
 
-@app.post("/explain")
-def explain(context: str,
-            s_text: str) -> Dialogue:
+@app.get("/explain")
+def explain(context: str, s_text: str) -> Dialogue:
     """
     Explain the selected text in context.
     """
     # create a prompt out of the text and the highlighted text.
     context = context.replace(s_text, f"(({s_text}))")
     prompt = EXPLAIN.format(context=context, s_text=s_text)
-    d = chat(prompt, Dialogue())
+    d = chat(Dialogue(messages=[Message(role="system", content=SYSTEM_EXPLAIN)]), prompt)
     return d
 
 
-@app.post("/suggest")
-def suggest(context: str,
-            s_text: str,
-            d: Dialogue) -> list[str]:
+@app.get("/reflect")
+def reflect() -> Dialogue:
     """
-    Suggest useful questions for the user.
+    Reflect on the selected text in context.
     """
-    prompt = SUGGEST.format(s_text=s_text)
-    d = chat(prompt, d)
-    suggestions = d.messages[-1].content.split('\n')
-    return suggestions
+    # create a prompt out of the text and the highlighted text.
+    d = chat(Dialogue(messages=[Message(role="system", content=SYSTEM_REFLECT)]))
+    return d
+
+
+@app.get("/coffeechat")
+def coffeechat() -> Dialogue:
+    """
+    Coffee Chat.
+    """
+    d = chat(Dialogue(messages=[Message(role="system", content=SYSTEM_COFFEECHAT)]))
+    return d
 
 
 @app.post("/log")
@@ -111,6 +115,20 @@ def log(context: str,
     r.raise_for_status()
     return r.json()
 
+
+# --- deprecated API's --- #
+
+@app.post("/suggest", deprecated=True)
+def suggest(context: str,
+            s_text: str,
+            d: Dialogue) -> list[str]:
+    """
+    Suggest useful questions for the user.
+    """
+    prompt = SUGGEST.format(s_text=s_text)
+    d = chat(prompt, d)
+    suggestions = d.messages[-1].content.split('\n')
+    return suggestions
 
 
 

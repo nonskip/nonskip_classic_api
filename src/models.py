@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from . import SYSTEM
+from . import SYSTEM_EXPLAIN
 
 
 class Message(BaseModel):
@@ -23,10 +23,8 @@ class Dialogue(BaseModel):
     refer to:
     # https://platform.openai.com/docs/guides/chat/introduction
     """
+    messages: list[Message]
     model: str = "gpt-3.5-turbo"
-    messages: list[Message] = [
-        Message(role="system", content=SYSTEM)
-    ]
 
     @classmethod
     @validator('model', allow_reuse=True)

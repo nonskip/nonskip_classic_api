@@ -1,2 +1,2 @@
 
-from app.main import suggest
+from src.main import suggest

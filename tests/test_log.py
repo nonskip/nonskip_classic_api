@@ -1,5 +1,5 @@
 from pprint import pprint
-from app.main import explain, log
+from src.main import explain, log
 
 
 def test_log_little_prince():

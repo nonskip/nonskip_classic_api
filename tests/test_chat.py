@@ -1,5 +1,5 @@
 
-from app.main import chat
+from src.main import chat
 
 
 def test_chat_works_cold_start():

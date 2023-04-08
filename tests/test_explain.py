@@ -1,2 +1,2 @@
 
-from app.main import chat
+from src.main import chat
