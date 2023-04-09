@@ -2,6 +2,8 @@ import requests
 from datetime import datetime
 from typing import Optional
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
 from .models import Dialogue, Message
 from . import SUGGEST, EXPLAIN, SYSTEM_EXPLAIN, SYSTEM_REFLECT, SYSTEM_COFFEECHAT
 from promptlayer import openai
@@ -9,6 +11,14 @@ import os
 import time
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins='*',
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/chat")
